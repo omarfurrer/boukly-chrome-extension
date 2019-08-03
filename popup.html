@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="ie=edge"
+    >
+    <title>Boukly</title>
+</head>
+
+<body>
+    <div id="auth-container">
+        <form
+            action=""
+            method="get"
+        >
+            <label>Email</label>
+            <input
+                id="email"
+                type="email"
+                name="email"
+            >
+            <label>Password</label>
+            <input
+                id="password"
+                type="password"
+                name="password"
+            >
+            <button id="auth-button" type="submit">Login</button>
+        </form>
+    </div>
+    <div
+        id="authed-container"
+        style="display: none"
+    >
+        <p>
+            Start bookmarking
+        </p>
+        <button id="logout-button">Logout</button>
+    </div>
+    <p
+        style="color: red"
+        id="error-message"
+    ></p>
+    <script
+        src="popup.js"
+        charset="utf-8"
+    ></script>
+</body>
+
+</html>
