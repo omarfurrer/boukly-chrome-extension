@@ -1,8 +1,9 @@
 chrome.tabs.onUpdated.addListener(
     function (tabId, changeInfo, tab) {
+        console.log(tabId, changeInfo, tab);
         if (changeInfo.url) {
             const url = changeInfo.url;
-            console.log('update');
+            console.log('update change');
             console.log(url);
             handleTogglingIcon(url);
         }
@@ -12,7 +13,16 @@ chrome.tabs.onUpdated.addListener(
 chrome.tabs.onActivated.addListener(function (activeInfo) {
     chrome.tabs.getSelected(null, function (tab) {
         var url = tab.url;
-        console.log('update');
+        console.log('active change');
+        console.log(url);
+        handleTogglingIcon(url);
+    });
+});
+
+chrome.windows.onFocusChanged.addListener(function (windowInfo) {
+    chrome.tabs.getSelected(null, function (tab) {
+        var url = tab.url;
+        console.log('window change');
         console.log(url);
         handleTogglingIcon(url);
     });
