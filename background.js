@@ -46,7 +46,7 @@ chrome.commands.onCommand.addListener(function (command) {
 function bookmark(url) {
     chrome.storage.sync.get(['auth'], function (result) {
         if (result && result.auth) {
-            fetch('http://bkly.test/api/bookmarks', {
+            fetch(config[env].baseUrl + '/api/bookmarks', {
                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                     headers: {
                         'Content-Type': 'application/json',
@@ -95,7 +95,8 @@ function bookmark(url) {
 function handleTogglingIcon(url) {
     chrome.storage.sync.get(['auth'], function (result) {
         if (result && result.auth) {
-            fetch('http://bkly.test/api/bookmarks/exists?url=' + encodeURIComponent(url), {
+            console.log(result.auth.access_token);
+            fetch(config[env].baseUrl + '/api/bookmarks/exists?url=' + encodeURIComponent(url), {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -114,6 +115,8 @@ function handleTogglingIcon(url) {
                 })
                 .then(result => {
                     const exists = result.exists;
+                    console.log(result);
+                    console.log(exists);
                     if (exists) {
                         chrome.browserAction.disable();
                     } else {

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-
     function setError(error) {
         document.getElementById('error-message').innerHTML = error;
     }
@@ -45,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // get access token
-        fetch('http://bkly.test/oauth/token', {
+        fetch(config[env].baseUrl + '/oauth/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
