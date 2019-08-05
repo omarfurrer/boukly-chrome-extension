@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('auth-button').addEventListener('click', auth, false);
     document.getElementById('logout-button').addEventListener('click', logout, false);
 
+    // check if storage has token
     chrome.storage.sync.get(['auth'], function (result) {
         if (result && result.auth) {
             document.getElementById("auth-container").style.display = "none";
@@ -22,27 +23,30 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function logout() {
+        // clear token from storage
         chrome.storage.sync.clear(function () {
             document.getElementById("auth-container").style.display = "block";
             document.getElementById("authed-container").style.display = "none";
-            chrome.storage.sync.get(['auth'], function (result) {
-                console.log(result);
-            });
         });
     }
 
     function auth(e) {
+
         e.preventDefault();
+
         clearError();
+
         const username = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+
         if (!username || !password) {
             setError('Email and Password cannot be empty');
             return;
         }
 
+        // get access token
         fetch('http://bkly.test/oauth/token', {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -67,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(result => {
                 const resultStringified = result;
-                // const resultStringified = JSON.stringify(result);
+                // set token in storage
                 chrome.storage.sync.set({
                     'auth': resultStringified
                 }, function () {

@@ -1,40 +1,35 @@
+// tab url updated
 chrome.tabs.onUpdated.addListener(
     function (tabId, changeInfo, tab) {
-        console.log(tabId, changeInfo, tab);
         if (changeInfo.url) {
             const url = changeInfo.url;
-            console.log('update change');
-            console.log(url);
             handleTogglingIcon(url);
         }
     }
 );
 
+// main tab changed
 chrome.tabs.onActivated.addListener(function (activeInfo) {
     chrome.tabs.getSelected(null, function (tab) {
         var url = tab.url;
-        console.log('active change');
-        console.log(url);
         handleTogglingIcon(url);
     });
 });
 
+// windows changed
 chrome.windows.onFocusChanged.addListener(function (windowInfo) {
     chrome.tabs.getSelected(null, function (tab) {
         var url = tab.url;
-        console.log('window change');
-        console.log(url);
         handleTogglingIcon(url);
     });
 });
 
+// keyboard shortcuts
 chrome.commands.onCommand.addListener(function (command) {
     switch (command) {
         case 'bookmark-page':
             chrome.tabs.getSelected(null, function (tab) {
                 var url = tab.url;
-                console.log('key');
-                console.log(url);
                 bookmark(url);
             });
             break;
@@ -43,6 +38,11 @@ chrome.commands.onCommand.addListener(function (command) {
     }
 });
 
+/**
+ * Bookmark a url.
+ * 
+ * @param string url 
+ */
 function bookmark(url) {
     chrome.storage.sync.get(['auth'], function (result) {
         if (result && result.auth) {
@@ -87,11 +87,16 @@ function bookmark(url) {
     });
 }
 
+/**
+ * Check if bookmark exists or not and handle icon accordingly.
+ * 
+ * @param string url 
+ */
 function handleTogglingIcon(url) {
     chrome.storage.sync.get(['auth'], function (result) {
         if (result && result.auth) {
             fetch('http://bkly.test/api/bookmarks/exists?url=' + encodeURIComponent(url), {
-                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + result.auth.access_token
