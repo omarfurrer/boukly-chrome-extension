@@ -72,17 +72,39 @@ function bookmark(url) {
                     chrome.tabs.getSelected(null, function (tab) {
                         var selectedUrl = tab.url;
                         if (selectedUrl == url) {
-                            chrome.browserAction.disable();
+                            setIconSuccess();
                         }
                     });
                 })
                 .catch(error => {
                     console.error(error);
-                    chrome.browserAction.enable();
+                    resetIcon();
                 });
         } else {
-            chrome.browserAction.enable();
+            resetIcon();
             alert('Please login with your extension to start bookmarking. Click on the icon in the top bar.');
+        }
+    });
+}
+
+function setIconSuccess() {
+    chrome.browserAction.setIcon({
+        path: {
+            "16": "images/logo-success-16x16.png",
+            "32": "images/logo-success-32x32.png",
+            "48": "images/logo-success-32x32.png",
+            "128": "images/logo-success-32x32.png"
+        }
+    });
+}
+
+function resetIcon() {
+    chrome.browserAction.setIcon({
+        path: {
+            "16": "images/logo-16x16.png",
+            "32": "images/logo-32x32.png",
+            "48": "images/logo-32x32.png",
+            "128": "images/logo-32x32.png"
         }
     });
 }
@@ -118,18 +140,17 @@ function handleTogglingIcon(url) {
                     console.log(result);
                     console.log(exists);
                     if (exists) {
-                        chrome.browserAction.disable();
+                        setIconSuccess();
                     } else {
-                        chrome.browserAction.enable();
+                        resetIcon();
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    chrome.browserAction.enable();
+                    resetIcon();
                 });
-            chrome.browserAction.disable();
         } else {
-            chrome.browserAction.enable();
+            resetIcon();
             alert('Please login with your extension to start bookmarking. Click on the icon in the top bar.');
         }
     });
