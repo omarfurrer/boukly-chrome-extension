@@ -50,6 +50,7 @@ function bookmark(url) {
                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'Authorization': 'Bearer ' + result.auth.access_token
                     },
                     body: JSON.stringify({
@@ -78,33 +79,18 @@ function bookmark(url) {
                 })
                 .catch(error => {
                     console.error(error);
+                    if (error.status == 401) {
+                        chrome.storage.sync.clear(function () {
+                            setIconFail();
+                            alert('Please login with your extension to start bookmarking. Click on the icon in the top bar.');
+                        });
+                        return;
+                    }
                     resetIcon();
                 });
         } else {
-            resetIcon();
+            setIconFail();
             alert('Please login with your extension to start bookmarking. Click on the icon in the top bar.');
-        }
-    });
-}
-
-function setIconSuccess() {
-    chrome.browserAction.setIcon({
-        path: {
-            "16": "images/logo-success-16x16.png",
-            "32": "images/logo-success-32x32.png",
-            "48": "images/logo-success-32x32.png",
-            "128": "images/logo-success-32x32.png"
-        }
-    });
-}
-
-function resetIcon() {
-    chrome.browserAction.setIcon({
-        path: {
-            "16": "images/logo-16x16.png",
-            "32": "images/logo-32x32.png",
-            "48": "images/logo-32x32.png",
-            "128": "images/logo-32x32.png"
         }
     });
 }
@@ -122,6 +108,7 @@ function handleTogglingIcon(url) {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'Authorization': 'Bearer ' + result.auth.access_token
                     }
                 })
@@ -147,11 +134,17 @@ function handleTogglingIcon(url) {
                 })
                 .catch(error => {
                     console.error(error);
+                    if (error.status == 401) {
+                        chrome.storage.sync.clear(function () {
+                            setIconFail();
+                        });
+                        return;
+                    }
                     resetIcon();
                 });
         } else {
-            resetIcon();
-            alert('Please login with your extension to start bookmarking. Click on the icon in the top bar.');
+            setIconFail();
+            // alert('Please login with your extension to start bookmarking. Click on the icon in the top bar.');
         }
     });
 }

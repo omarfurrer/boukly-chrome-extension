@@ -13,7 +13,7 @@
         }
     },
     "background": {
-        "scripts": ["config.js", "background.js"]
+        "scripts": ["config.js", "helpers.js", "background.js"]
     },
     "icons": {
         "16": "images/logo-16x16.png",

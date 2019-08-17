@@ -7,25 +7,34 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('error-message').innerHTML = '';
     }
 
+    function handleAuthed() {
+        document.getElementById("auth-container").style.display = "none";
+        document.getElementById("authed-container").style.display = "block";
+        resetIcon();
+    }
+
+    function handleUnauthed() {
+        document.getElementById("auth-container").style.display = "block";
+        document.getElementById("authed-container").style.display = "none";
+        setIconFail();
+    }
+
     document.getElementById('auth-button').addEventListener('click', auth, false);
     document.getElementById('logout-button').addEventListener('click', logout, false);
 
     // check if storage has token
     chrome.storage.sync.get(['auth'], function (result) {
         if (result && result.auth) {
-            document.getElementById("auth-container").style.display = "none";
-            document.getElementById("authed-container").style.display = "block";
+            handleAuthed();
         } else {
-            document.getElementById("auth-container").style.display = "block";
-            document.getElementById("authed-container").style.display = "none";
+            handleUnauthed();
         }
     });
 
     function logout() {
         // clear token from storage
         chrome.storage.sync.clear(function () {
-            document.getElementById("auth-container").style.display = "block";
-            document.getElementById("authed-container").style.display = "none";
+            handleUnauthed();
         });
     }
 
@@ -48,11 +57,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
                 body: JSON.stringify({
                     grant_type: 'password',
-                    client_id: 2,
-                    client_secret: 'vXdgX78ZZLGRd2R20QSxkko8VcDk2x3mbGOkkiQg',
+                    client_id: config[env].authClientId,
+                    client_secret: config[env].authClientSecret,
                     username: username,
                     password: password,
                     scope: ''
@@ -74,9 +84,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 chrome.storage.sync.set({
                     'auth': resultStringified
                 }, function () {
-                    document.getElementById("auth-container").style.display = "none";
-                    document.getElementById("authed-container").style.display = "block";
+                    handleAuthed();
                 });
+                //TODO: on login check current page
             })
             .catch(error => {
                 error.response.json().then(body => {
