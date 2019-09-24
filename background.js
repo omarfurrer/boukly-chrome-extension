@@ -103,7 +103,6 @@ function bookmark(url) {
 function handleTogglingIcon(url) {
     chrome.storage.sync.get(['auth'], function (result) {
         if (result && result.auth) {
-            console.log(result.auth.access_token);
             fetch(config[env].baseUrl + '/api/bookmarks/exists?url=' + encodeURIComponent(url), {
                     method: 'GET',
                     headers: {
@@ -124,8 +123,6 @@ function handleTogglingIcon(url) {
                 })
                 .then(result => {
                     const exists = result.exists;
-                    console.log(result);
-                    console.log(exists);
                     if (exists) {
                         setIconSuccess();
                     } else {
